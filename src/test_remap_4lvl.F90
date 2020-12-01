@@ -42,6 +42,7 @@ program test_remap_4lvl
   thisTest = .false.
   call cpu_time(cptim1)
   call initialize_remapping(CS, 'PPM_H4', answers_2018=answers_2018)
+  !$acc kernels
   do i=1,imax
     if (verbose) write(*,*) 'h0 (test data)'
     if (verbose) call dumpGrid(n0,h0(i,:),x0(i,:),u0(i,:))
@@ -54,6 +55,7 @@ program test_remap_4lvl
     if (verbose) write(*,*) 'h1 (by projection)'
     if (verbose) call dumpGrid(n1,h1(i,:),x1(i,:),u1(i,:))
   enddo
+  !$acc end kernels
   call cpu_time(cptim2)
   print '(''time taken '',f8.3)', (cptim2 - cptim1)
   if (thisTest) write(*,*) 'remapping_unit_tests_gpu: Failed remapping_core_w() with error: ',err
